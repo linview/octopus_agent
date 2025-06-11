@@ -1,0 +1,26 @@
+template: |
+  {{ role_instruction }}
+
+  {{ domain_knowledge }}
+
+  请按照以下步骤进行：
+
+  1. 首先，给出你的初步答案：
+  {{ initial_answer }}
+
+  2. 然后，从以下方面进行自我批评：
+     - 逻辑是否严密
+     - 论据是否充分
+     - 是否有遗漏的重要信息
+     - 是否有潜在的偏见
+     - 是否考虑了其他可能性
+
+  3. 基于自我批评，给出改进后的最终答案。
+
+  问题：{{ question }}
+
+  上下文信息：
+  {{ context }}
+type: SelfCritiquePrompt
+desc: "Self-critique 模板，通过自我批评提高答案质量"
+version: "1.0.0" 

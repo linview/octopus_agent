@@ -1,0 +1,39 @@
+[project]
+name = "rag-service"
+version = "0.1.0"
+description = "RAG Service with LLM and vectorDB"
+authors = [
+    {name = "linview", email = "linview@gmail.com"},
+]
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.27.1",
+    "pydantic>=2.6.3",
+    "pydantic-settings>=2.2.1",
+    "openai>=1.12.0",
+    "langchain>=0.1.12",
+    "langchain-openai>=0.0.8",
+    "pymilvus>=2.3.6",
+    "python-dotenv>=1.0.1",
+    "transformers>=4.52.4",
+    "torch>=2.7.1",
+    "pytest>=8.4.0",
+    "loguru>=0.7.3",
+]
+requires-python = ">=3.11, <4.0"
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.7.0",
+    "isort>=5.12.0",
+    "mypy>=1.5.1"
+]
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3 

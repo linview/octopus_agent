@@ -1,0 +1,19 @@
+template: |
+  {{ role_instruction }}
+
+  {{ domain_knowledge }}
+
+  {{ task_instruction }}
+
+  请按照以下步骤进行思考：
+  {{ steps }}
+
+  问题：{{ question }}
+
+  上下文信息：
+  {{ context }}
+
+  请开始你的回答：
+type: ChainOfThoughtPrompt
+desc: "基础思维链模板，用于构建结构化的思考过程"
+version: "1.0.0" 

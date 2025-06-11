@@ -1,0 +1,19 @@
+template: |
+  {{ role_instruction }}
+
+  {{ domain_knowledge }}
+
+  请从多个角度思考这个问题，并给出多个可能的答案：
+
+  问题：{{ question }}
+
+  上下文信息：
+  {{ context }}
+
+  请从以下角度思考：
+  {{ perspectives }}
+
+  请给出多个可能的答案，并说明每个答案的优缺点。最后，综合这些答案，给出一个最优的解决方案。
+type: SelfConsistencyPrompt
+desc: "Self-consistency 模板，通过多角度思考提高答案的可靠性"
+version: "1.0.0" 

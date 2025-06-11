@@ -1,0 +1,20 @@
+template: |
+  {{ role_instruction }}
+
+  {{ domain_knowledge }}
+
+  以下是几个示例：
+
+  {{ examples }}
+
+  现在，请基于以上示例，回答以下问题：
+
+  问题：{{ question }}
+
+  上下文信息：
+  {{ context }}
+
+  请开始你的回答：
+type: FewShotPrompt
+desc: "Few-shot Learning 模板，通过示例引导模型学习特定模式"
+version: "1.0.0" 
