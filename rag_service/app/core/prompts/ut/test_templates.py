@@ -192,7 +192,8 @@ def test_task_templates(templates_dir, template_info):
             "steps": [ "内容分析", "摘要生成", "质量检查" ], 
             "content": "这是一段测试文本,它讲述了一个来自遥远东方国度,有一个国王和他10个儿子的故事",
             "requirements": "请总结这段文本的中心思想",
-            "domain_knowledge": "参考天方夜谭",
+            "key_points": "国王有几个女儿",
+            "max_length": 512,
         },
         "problem_solving": {
             "task_type": "问题解决",

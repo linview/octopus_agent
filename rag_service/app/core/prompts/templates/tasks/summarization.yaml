@@ -1,35 +1,44 @@
 template: |
-  文本摘要任务流程：
+  <prompt>
+    <instruction>
+      请对以下文本进行文本摘要，要求：
+      1. 内容分析
+         - 识别主要主题和关键点
+         - 确定文本结构和逻辑关系
+         - 识别重要细节和支撑论据
 
-  1. 内容分析
-     - 识别主要主题和关键点
-     - 确定文本结构和逻辑关系
-     - 识别重要细节和支撑论据
+      2. 摘要生成
+         - 提取核心信息
+         - 保持逻辑连贯性
+         - 确保信息完整性
+         - 控制摘要长度
 
-  2. 摘要生成
-     - 提取核心信息
-     - 保持逻辑连贯性
-     - 确保信息完整性
-     - 控制摘要长度
+      3. 质量检查
+         - 检查信息准确性
+         - 确保语言流畅性
+         - 验证摘要完整性
+         - 确认符合目标要求
+    </instruction>
 
-  3. 质量检查
-     - 检查信息准确性
-     - 确保语言流畅性
-     - 验证摘要完整性
-     - 确认符合目标要求
+    <context>
+      原文内容：
+      {{ content }}
+    </context>
 
-  原文内容：
-  {{ content }}
+    <requirements>
+      摘要要求: {{ requirements }}
+      摘要长度：{{ max_length }}
+      重点内容：{{ key_points }}
+    </requirements>
 
-  摘要要求：
-  {{ requirements }}
-
-  {{ domain_knowledge }}
+    <output>
+    </output>
+  </prompt>
 type: TaskPrompt
 task_type: 文本摘要
 steps:
   - 内容分析
   - 摘要生成
   - 质量检查
-desc: "文本摘要任务模板，适用于需要提取和总结文本核心信息的场景"
-version: "1.0.0" 
+version: "1.0.0"
+desc: "文本摘要模板" 
