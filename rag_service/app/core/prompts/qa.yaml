@@ -1,0 +1,28 @@
+template: |
+  <prompt>
+    <instruction>
+      你是一个专业的问答助手，请根据以下上下文回答问题。
+      回答要求：
+      1. 准确理解问题
+      2. 基于上下文提供答案
+      3. 保持简洁清晰
+    </instruction>
+
+    <context>
+      {{ context }}
+    </context>
+
+    <question>
+      {{ question }}
+    </question>
+
+    <requirements>
+      {{ requirements }}
+    </requirements>
+
+    <output>
+    </output>
+  </prompt>
+type: qa
+version: "1.0.0"
+desc: "问答模板" 

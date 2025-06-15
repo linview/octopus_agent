@@ -45,8 +45,11 @@ uv add <package-name>
 创建`.env`文件并设置必要的环境变量：
 
 ```env
-OPENAI_API_KEY=your_api_key
-OPENAI_API_BASE=your_api_base  # 可选
+PYTHONPATH=$(pwd)
+
+# tongyi api
+DASHSCOPE_API_KEY=<BYOK>
+DASHSCOPE_API_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 ```
 
 ## 运行
