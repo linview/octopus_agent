@@ -1,0 +1,102 @@
+2025-07-19 01:29:31 | INFO     | __main__:test_logging:140 | 这是一条测试日志
+2025-07-19 01:29:31 | WARNING  | __main__:test_logging:141 | 这是一条警告日志
+2025-07-19 01:29:31 | ERROR    | __main__:test_logging:142 | 这是一条错误日志
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.51秒，结果类型: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.51秒，结果类型: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:53 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.31秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.31秒，结果类型: <class 'str'>
+2025-07-19 01:30:54 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.31秒，结果类型: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:23 | INFO     | core.base_agent:execute:69 | 开始执行 DemoAsyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:78 | DemoAsyncAgent 执行成功，耗时: 0.50秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.31秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.31秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.31秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:269 | 开始执行 DemoSyncAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:279 | DemoSyncAgent 执行成功，耗时: 0.30秒，结果类型: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:69 | 开始执行 ErrorAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:69 | 开始执行 ErrorAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:69 | 开始执行 ErrorAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | INFO     | core.base_agent:execute:69 | 开始执行 ErrorAgent，输入数据: <class 'str'>
+2025-07-19 01:32:24 | ERROR    | core.base_agent:execute:87 | ErrorAgent 执行失败，耗时: 0.00秒，错误: 模拟处理错误
+2025-07-19 01:32:24 | ERROR    | core.base_agent:execute:87 | ErrorAgent 执行失败，耗时: 0.00秒，错误: 模拟处理错误
+2025-07-19 01:32:24 | ERROR    | core.base_agent:execute:87 | ErrorAgent 执行失败，耗时: 0.00秒，错误: 模拟处理错误
+2025-07-19 01:32:24 | ERROR    | core.base_agent:execute:87 | ErrorAgent 执行失败，耗时: 0.00秒，错误: 模拟处理错误
+2025-07-19 01:32:24 | INFO     | __main__:demo_logging:150 | 这是一条信息日志
+2025-07-19 01:32:24 | INFO     | __main__:demo_logging:150 | 这是一条信息日志
+2025-07-19 01:32:24 | INFO     | __main__:demo_logging:150 | 这是一条信息日志
+2025-07-19 01:32:24 | INFO     | __main__:demo_logging:150 | 这是一条信息日志
+2025-07-19 01:32:24 | INFO     | __main__:demo_logging:150 | 这是一条信息日志
+2025-07-19 01:32:24 | WARNING  | __main__:demo_logging:151 | 这是一条警告日志
+2025-07-19 01:32:24 | WARNING  | __main__:demo_logging:151 | 这是一条警告日志
+2025-07-19 01:32:24 | WARNING  | __main__:demo_logging:151 | 这是一条警告日志
+2025-07-19 01:32:24 | WARNING  | __main__:demo_logging:151 | 这是一条警告日志
+2025-07-19 01:32:24 | WARNING  | __main__:demo_logging:151 | 这是一条警告日志
+2025-07-19 01:32:24 | ERROR    | __main__:demo_logging:152 | 这是一条错误日志
+2025-07-19 01:32:24 | ERROR    | __main__:demo_logging:152 | 这是一条错误日志
+2025-07-19 01:32:24 | ERROR    | __main__:demo_logging:152 | 这是一条错误日志
+2025-07-19 01:32:24 | ERROR    | __main__:demo_logging:152 | 这是一条错误日志
+2025-07-19 01:32:24 | ERROR    | __main__:demo_logging:152 | 这是一条错误日志

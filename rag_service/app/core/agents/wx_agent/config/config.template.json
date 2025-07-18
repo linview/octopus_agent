@@ -1,0 +1,89 @@
+{
+  "crawler": {
+    "max_articles": 10,
+    "delay": 2.0,
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+    "timeout": 30,
+    "retry_times": 3,
+    "headless": true,
+    "browser_type": "chromium",
+    "proxy": null,
+    "save_images": true,
+    "save_videos": true
+  },
+  "storer": {
+    "storage_type": "local",
+    "data_path": "./data",
+    "mongodb_uri": null,
+    "mongodb_db": "wx_agent",
+    "mongodb_collection": "articles",
+    "elasticsearch_url": null,
+    "elasticsearch_index": "wx_articles",
+    "backup_enabled": true,
+    "backup_interval": 24,
+    "compression_enabled": false
+  },
+  "analyzer": {
+    "model_name": "jieba",
+    "features": ["keywords", "summary", "sentiment", "style"],
+    "sentiment_model": "snownlp",
+    "keyword_count": 10,
+    "summary_length": 200,
+    "style_confidence_threshold": 0.7,
+    "parallel_processing": true,
+    "cache_enabled": true,
+    "cache_ttl": 3600
+  },
+  "generator": {
+    "llm_model": "Qwen2-7B-Instruct",
+    "max_length": 1500,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 50,
+    "repetition_penalty": 1.1,
+    "do_sample": true,
+    "num_beams": 1,
+    "early_stopping": true,
+    "style_weight": 0.8,
+    "content_weight": 0.2
+  },
+  "embedding": {
+    "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "vector_db_type": "chromadb",
+    "vector_db_path": "./data/vectors",
+    "collection_name": "wx_articles",
+    "chunk_size": 512,
+    "chunk_overlap": 50,
+    "batch_size": 32,
+    "similarity_threshold": 0.7,
+    "max_results": 10
+  },
+  "dify": {
+    "enabled": false,
+    "api_url": "http://localhost:5001",
+    "api_key": null,
+    "workspace_id": null,
+    "app_id": null,
+    "timeout": 30,
+    "retry_times": 3,
+    "webhook_url": null,
+    "webhook_secret": null
+  },
+  "logging": {
+    "level": "INFO",
+    "file_path": "logs/wx_agent.log",
+    "max_size": "10 MB",
+    "retention": "7 days",
+    "format": "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | <level>{message}</level>",
+    "console_output": true,
+    "file_output": true
+  },
+  "debug": false,
+  "test_mode": false,
+  "max_workers": 4,
+  "memory_limit": "2GB",
+  "timeout": 300,
+  "config_version": "1.0.0",
+  "created_at": "2025-07-18T00:00:00",
+  "updated_at": "2025-07-18T00:00:00"
+} 
