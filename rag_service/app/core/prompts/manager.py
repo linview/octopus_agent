@@ -5,7 +5,7 @@ from pathlib import Path
 
 from rag_service.app.core.prompts.base import BasePrompt
 from rag_service.app.core.prompts.templates import BaseTemplate
-from .templates import (
+from rag_service.app.core.prompts.templates import (
     RoleBasedPrompt,
     ChainOfThoughtPrompt,
     FewShotPrompt,
