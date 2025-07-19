@@ -4,3 +4,26 @@ __pycache__
 .env*
 .vscode/
 .DS_Store
+
+# 排除data目录下的文件，但保留目录结构
+rag_service/app/core/agents/wx_agent/data/*
+!rag_service/app/core/agents/wx_agent/data/.gitkeep
+
+# 排除日志文件
+logs/
+*.log
+
+# 排除测试缓存
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 排除临时文件
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# 排除IDE文件
+.idea/
+*.sublime-*

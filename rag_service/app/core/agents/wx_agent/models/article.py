@@ -42,11 +42,11 @@ class Article(BaseModel):
     """文章完整模型"""
     article_id: Optional[str] = Field(None, description="文章唯一标识")
     title: str = Field(..., description="文章标题")
-    content: str = Field(..., description="文章正文")
+    content: str = Field(..., description="文章正文（包含图片锚点）")
     publish_time: Optional[datetime] = Field(None, description="发布时间")
     account_name: str = Field(..., description="公众号名称")
     url: str = Field(..., description="原文链接")
-    images: List[str] = Field(default_factory=list, description="图片链接列表")
+    images: Dict[str, str] = Field(default_factory=dict, description="图片锚点映射 {img_id: image_url}")
     videos: List[str] = Field(default_factory=list, description="视频链接列表")
     tags: List[str] = Field(default_factory=list, description="标签列表")
     features: ArticleFeatures = Field(default_factory=ArticleFeatures, description="文章特征")
@@ -78,12 +78,50 @@ class Article(BaseModel):
         self.features = features
         self.updated_at = datetime.now()
     
-    def add_image(self, image_url: str) -> None:
+    def add_image(self, img_id: str, image_url: str) -> None:
         """添加图片链接"""
-        if image_url not in self.images:
-            self.images.append(image_url)
-            self.features.has_images = True
-            self.updated_at = datetime.now()
+        self.images[img_id] = image_url
+        self.features.has_images = True
+        self.updated_at = datetime.now()
+    
+    def add_image_anchor(self, img_id: str, image_url: str, position: int = None) -> None:
+        """添加图片锚点到内容中"""
+        # 添加图片映射
+        self.add_image(img_id, image_url)
+        
+        # 在内容中插入锚点
+        anchor = f" $img_{img_id}$ "
+        if position is None:
+            # 如果没有指定位置，添加到内容末尾
+            self.content += f"\n\n{anchor}\n"
+        else:
+            # 在指定位置插入锚点
+            lines = self.content.split('\n')
+            if position < len(lines):
+                lines.insert(position, anchor)
+                self.content = '\n'.join(lines)
+        
+        self.updated_at = datetime.now()
+    
+    def get_image_count(self) -> int:
+        """获取图片数量"""
+        return len(self.images)
+    
+    def get_image_urls(self) -> List[str]:
+        """获取所有图片URL列表"""
+        return list(self.images.values())
+    
+    def get_image_anchors(self) -> List[str]:
+        """获取所有图片锚点"""
+        return [f"$img_{img_id.replace('img_', '')}$" for img_id in self.images.keys()]
+    
+    def replace_image_anchors_with_urls(self) -> str:
+        """将内容中的图片锚点替换为实际URL"""
+        content = self.content
+        for img_id, url in self.images.items():
+            anchor = f"$img_{img_id.replace('img_', '')}$"
+            content = content.replace(anchor, f"[图片: {url}]")
+        return content
     
     def add_video(self, video_url: str) -> None:
         """添加视频链接"""

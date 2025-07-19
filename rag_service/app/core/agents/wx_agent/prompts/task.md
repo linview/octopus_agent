@@ -150,65 +150,191 @@ addopts = "-v --tb=short"
 ---
 
 ## task#2: CrawlerAgent开发（爬虫Agent）
-**目标**: 实现微信公众号文章爬取功能
+**目标**: 实现微信公众号单篇文章爬取功能
+
+**重要更新（2025-07-19）**:
+⚠️ **发现风险**：微信公众号主页设置了反爬虫限制，无法在浏览器中访问公众号主页获取文章列表
+✅ **解决方案**：调整为基于文章URL的单篇爬取方案
+
+**重大技术突破（2025-07-19）**:
+🎯 **图片锚点功能实现**：成功实现图片在文章中的语义位置保持
+- ✅ 图片URL与内容锚点一一对应
+- ✅ 支持懒加载图片处理（data-src属性）
+- ✅ 过滤非文章内容图片（广告、头像等）
+- ✅ 锚点格式：`$img_1$`, `$img_2$` 等
+- ✅ 数据结构：`images: {"img_1": "url1", "img_2": "url2"}`
 
 **关键流程**:
 ```python
-# 伪代码：CrawlerAgent核心实现
+# 伪代码：调整后的CrawlerAgent核心实现
 class CrawlerAgent(BaseAgent):
     def _process(self, input_data: Dict) -> List[Article]:
         # 1. 解析输入参数
-        account_name = input_data.get('account_name')
+        article_urls = input_data.get('article_urls', [])  # 文章URL列表
         max_count = input_data.get('max_count', 10)
         
-        # 2. 启动浏览器
-        browser = await self.launch_browser()
+        # 2. 验证输入
+        if not article_urls:
+            raise ValueError("必须提供article_urls")
         
-        # 3. 访问公众号主页
-        await self.visit_account_page(account_name)
+        # 3. 限制爬取数量
+        article_urls = article_urls[:max_count]
         
-        # 4. 获取文章列表
-        article_list = await self.get_article_list(max_count)
-        
-        # 5. 获取文章详情
-        articles = await self.get_article_details(article_list)
-        
-        # 6. 下载媒体文件
-        await self.download_media(articles)
+        # 4. 爬取文章
+        articles = await self.crawl_articles_by_urls(article_urls)
         
         return articles
     
-    async def get_article_list(self, max_count: int) -> List[ArticleMeta]:
-        # 滚动加载更多文章
-        # 解析文章链接和标题
-        # 返回文章基本信息列表
+    async def crawl_articles_by_urls(self, article_urls: List[str]) -> List[Article]:
+        """通过文章URL列表爬取文章"""
+        articles = []
+        for url in article_urls:
+            try:
+                article = await self.crawl_single_article(url)
+                articles.append(article)
+            except Exception as e:
+                self.logger.error(f"爬取文章失败 {url}: {str(e)}")
+                continue
+        return articles
     
-    async def get_article_details(self, article_list: List[ArticleMeta]) -> List[Article]:
-        # 并发访问文章页面
-        # 提取文章正文、发布时间
-        # 提取图片链接
+    async def crawl_single_article(self, article_url: str) -> Article:
+        """爬取单篇文章"""
+        # 1. 启动浏览器
+        browser = await self.launch_browser()
+        
+        # 2. 访问文章页面
+        await self.visit_article_page(article_url)
+        
+        # 3. 解析文章内容（包含图片锚点处理）
+        article = await self.parse_article_content()
+        
+        # 4. 下载媒体文件
+        await self.download_media(article)
+        
+        return article
+    
+    # 🎯 新增：图片锚点处理功能
+    async def _parse_content_with_images(self, html_content: str, text_content: str, image_data: Dict[str, str]) -> str:
+        """解析HTML内容，将图片URL替换为锚点"""
+        # 1. 解析HTML，找到所有图片标签
+        # 2. 优先使用data-src属性（懒加载图片）
+        # 3. 过滤非文章内容图片
+        # 4. 在HTML中替换图片标签为锚点
+        # 5. 返回包含锚点的文本内容
+    
+    async def _extract_images_with_positions(self) -> Dict[str, str]:
+        """提取文章正文中的图片URL和位置信息"""
+        # 1. 使用Playwright选择器获取图片
+        # 2. 处理懒加载图片
+        # 3. 过滤文章内容图片
+        # 4. 返回图片数据字典 {img_id: image_url}
+    
+    def _validate_image_anchors(self, content: str, image_data: Dict[str, str]) -> None:
+        """验证内容中的锚点与图片数据的一致性"""
+        # 1. 提取内容中的所有锚点
+        # 2. 验证锚点数量与图片数据一致性
+        # 3. 验证锚点ID与图片数据一致性
+    
+    # ⚠️ 待验证：RSS方案可行性
+    # async def get_urls_from_rss(self, rss_url: str) -> List[str]:
+    #     """从RSS订阅源获取文章URL（待验证可行性）"""
+    #     pass
 ```
 
 **技术要点**:
 - 继承BaseAgent基类
 - 使用Playwright处理动态页面
 - 实现反爬虫策略（随机延迟、User-Agent）
-- 支持分页获取历史文章
+- ~~支持RSS订阅源解析~~ ⚠️ **待验证**
 - 异步并发处理提高效率
+- 错误处理和重试机制
+- 🎯 **图片锚点功能**：保持图片在文章中的语义位置
+- 🎯 **懒加载图片处理**：支持data-src属性获取真实图片URL
+- 🎯 **图片过滤机制**：只保留文章内容图片，过滤广告、头像等
+
+**输入数据格式**:
+```python
+# 提供文章URL列表
+input_data = {
+    'article_urls': [
+        'https://mp.weixin.qq.com/s/article1',
+        'https://mp.weixin.qq.com/s/article2',
+        'https://mp.weixin.qq.com/s/article3'
+    ],
+    'max_count': 5
+}
+
+# ⚠️ 待验证：RSS方案
+# input_data = {
+#     'rss_url': 'https://example.com/rss.xml',
+#     'max_count': 10
+# }
+```
+
+**输出数据格式（更新）**:
+```python
+# 文章数据结构（包含图片锚点）
+{
+    "article_id": "article_1752898926_9957",
+    "title": "编程助手怎么选？左手lingma，右手cursor",
+    "content": " $img_1$ 都2025年了，作为程序员如果你还没试过Vibe Coding那就out啦... $img_2$ 2023年copilot算是当时最流行的编程助手...",
+    "publish_time": "2025-06-19T10:27:00",
+    "account_name": "琳时闲话",
+    "url": "https://mp.weixin.qq.com/s/8xJcEI1Mx1lYeCvQsK7t9Q",
+    "images": {
+        "img_1": "https://mmbiz.qpic.cn/mmbiz_png/...",
+        "img_2": "https://mmbiz.qpic.cn/mmbiz_jpg/...",
+        "img_3": "https://mmbiz.qpic.cn/mmbiz_png/...",
+        "img_4": "https://mmbiz.qpic.cn/mmbiz_png/...",
+        "img_5": "https://mmbiz.qpic.cn/mmbiz_png/...",
+        "img_6": "https://mmbiz.qpic.cn/mmbiz_png/...",
+        "img_7": "https://mmbiz.qpic.cn/mmbiz_png/..."
+    },
+    "tags": [],
+    "local_path": "",
+    "created_at": "2025-07-19T12:25:17.075",
+    "features": {
+        "keywords": [],
+        "summary": "",
+        "sentiment": "neutral",
+        "topic_category": null,
+        "tags": []
+    }
+}
+```
 
 **依赖管理**:
 ```bash
 # 添加Playwright相关依赖
 uv add playwright
 uv run playwright install chromium
+
+# 添加HTML解析依赖
+uv add beautifulsoup4
+
+# ⚠️ 待验证：RSS解析依赖
+# uv add feedparser
+```
+
+**测试验证**:
+```bash
+# 运行图片锚点功能测试
+python test_image_anchors.py
+
+# 验证结果：
+# ✅ 成功替换 7 个图片标签
+# ✅ 锚点验证完成: 内容中7个锚点，图片数据中7个图片
+# ✅ 所有锚点与图片数据一一对应
 ```
 
 **交付物**:
 - [ ] CrawlerAgent核心类 (agents/crawler_agent.py)
-- [ ] 页面解析器 (agents/crawler/page_parser.py)
+- [ ] 文章页面解析器 (agents/crawler/article_parser.py)
+- ~~[ ] RSS解析器 (agents/crawler/rss_parser.py)~~ ⚠️ **待验证**
 - [ ] 媒体下载器 (agents/crawler/media_downloader.py)
 - [ ] 爬虫配置文件 (agents/crawler/config.py)
 - [ ] 单元测试 (tests/test_crawler_agent.py)
+- [ ] 使用示例 (examples/crawler_example.py)
 
 ---
 

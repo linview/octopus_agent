@@ -7,9 +7,9 @@ Agent基类模块
 import asyncio
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 
-from loguru import logger, Logger
+from loguru import logger
 
 
 class BaseAgent(ABC):
@@ -28,7 +28,7 @@ class BaseAgent(ABC):
         self.last_execution = None
         self.execution_count = 0
         
-    def _setup_logger(self) -> Logger:
+    def _setup_logger(self):
         """设置日志记录器"""
         # 配置日志格式
         log_format = (
