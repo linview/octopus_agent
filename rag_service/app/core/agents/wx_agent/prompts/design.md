@@ -74,54 +74,54 @@ class CrawlerAgent:
         # 1. 使用BeautifulSoup解析HTML
         soup = BeautifulSoup(html_content, 'html.parser')
         img_tags = soup.find_all('img')
-        
+
         # 2. 创建URL到锚点ID的映射
         url_to_anchor = {url: img_id for img_id, url in image_data.items()}
-        
+
         # 3. 替换图片标签为锚点
         for img_tag in img_tags:
             # 优先使用data-src属性（懒加载图片）
             img_url = img_tag.get('data-src') or img_tag.get('data-original') or img_tag.get('src')
-            
+
             if img_url and img_url.startswith('http'):
                 clean_url = self._clean_image_url(img_url)
-                
+
                 if clean_url in url_to_anchor:
                     img_id = url_to_anchor[clean_url]
                     anchor_id = img_id.replace('img_', '')
-                    
+
                     # 在HTML中替换图片标签为锚点
                     anchor_tag = soup.new_string(f" $img_{anchor_id}$ ")
                     img_tag.replace_with(anchor_tag)
-        
+
         # 4. 返回包含锚点的文本内容
         return soup.get_text()
-    
+
     async def _extract_images_with_positions(self) -> Dict[str, str]:
         """提取文章正文中的图片URL和位置信息"""
         # 1. 使用Playwright选择器获取图片
         content_selectors = ['#js_content img', '.rich_media_content img']
-        
+
         # 2. 处理懒加载图片
         # 等待页面完全加载，再次查找懒加载图片
         await asyncio.sleep(2)
-        
+
         # 3. 过滤文章内容图片
         # 只保留微信图片（mmbiz.qpic.cn）和文章内容图片
         # 过滤头像、广告等非内容图片
-        
+
         # 4. 返回图片数据字典 {img_id: image_url}
         return {f"img_{i}": url for i, url in enumerate(unique_image_urls, 1)}
-    
+
     def _validate_image_anchors(self, content: str, image_data: Dict[str, str]) -> None:
         """验证内容中的锚点与图片数据的一致性"""
         # 1. 提取内容中的所有锚点
         anchor_pattern = r'\$img_(\d+)\$'
         content_anchors = re.findall(anchor_pattern, content)
-        
+
         # 2. 验证锚点数量与图片数据一致性
         image_ids = [img_id.replace('img_', '') for img_id in image_data.keys()]
-        
+
         # 3. 验证锚点ID与图片数据一致性
         if len(content_anchors) != len(image_ids):
             self.logger.warning(f"锚点数量不匹配: 内容中{len(content_anchors)}个，图片数据中{len(image_ids)}个")
@@ -177,45 +177,45 @@ class CrawlerAgent:
             article = await self.crawl_single_article(url)
             articles.append(article)
         return articles
-    
+
     async def crawl_single_article(self, article_url: str) -> Article:
         """爬取单篇文章"""
         # 1. 启动浏览器
         browser = await self.launch_browser()
-        
+
         # 2. 访问文章页面
         await self.visit_article_page(article_url)
-        
+
         # 3. 解析文章内容（包含图片锚点处理）
         article = await self.parse_article_content()
-        
+
         # 4. 下载媒体文件
         await self.download_media(article)
-        
+
         return article
-    
+
     # 🎯 新增：图片锚点处理功能
     async def _parse_content_with_images(self, html_content: str, text_content: str, image_data: Dict[str, str]) -> str:
         """解析HTML内容，将图片URL替换为锚点"""
         # 实现图片锚点处理逻辑
-    
+
     async def _extract_images_with_positions(self) -> Dict[str, str]:
         """提取文章正文中的图片URL和位置信息"""
         # 实现图片提取和过滤逻辑
-    
+
     def _validate_image_anchors(self, content: str, image_data: Dict[str, str]) -> None:
         """验证内容中的锚点与图片数据的一致性"""
         # 实现锚点验证逻辑
-    
+
     # ⚠️ 待验证：RSS方案可行性
     async def crawl_from_rss(self, rss_url: str) -> List[Article]:
         """从RSS订阅源获取文章（待验证可行性）"""
         # 1. 解析RSS源
         rss_items = await self.parse_rss_feed(rss_url)
-        
+
         # 2. 提取文章URL
         article_urls = [item.link for item in rss_items]
-        
+
         # 3. 爬取文章
         return await self.crawl_articles_by_urls(article_urls)
 ```
@@ -378,23 +378,23 @@ class AnalyzerAgent:
     def analyze_writing_style(self, articles: List[Article]) -> StyleProfile:
         # 1. 分析词汇特征
         vocabulary = analyze_vocabulary(articles)
-        
+
         # 2. 分析句式结构
         sentence_structure = analyze_sentence_structure(articles)
-        
+
         # 3. 分析情感倾向
         emotion_tone = analyze_emotion_tone(articles)
-        
+
         # 4. 分析写作习惯
         writing_habits = analyze_writing_habits(articles)
-        
+
         return StyleProfile(
             vocabulary=vocabulary,
             sentence_structure=sentence_structure,
             emotion_tone=emotion_tone,
             writing_habits=writing_habits
         )
-    
+
     def generate_style_prompt(self, style_profile: StyleProfile) -> str:
         # 生成风格描述提示词
         description = "你是一个专业的公众号作者，具有以下写作风格特征：\n"
@@ -418,15 +418,15 @@ class StyleTrainer:
             }
             training_data.append(sample)
         return training_data
-    
+
     def train_model(self, model, training_data):
         # 2. 配置LoRA参数
         lora_config = LoraConfig(r=16, lora_alpha=32, ...)
-        
+
         # 3. 训练模型
         trainer = Trainer(model, training_data, ...)
         trainer.train()
-        
+
         # 4. 保存模型
         trainer.save_model("./style_model")
 ```
@@ -541,15 +541,15 @@ class CrawlerAgent:
     def crawl_articles_by_urls(self, article_urls: List[str]) -> List[Article]:
         """通过文章URL列表爬取文章"""
         pass
-    
+
     def crawl_single_article(self, article_url: str) -> Article:
         """爬取单篇文章"""
         pass
-    
+
     def validate_article_url(self, url: str) -> bool:
         """验证文章URL的有效性"""
         pass
-    
+
     # ⚠️ 待验证：RSS方案可行性
     # def crawl_from_rss(self, rss_url: str) -> List[Article]:
     #     """从RSS订阅源获取文章（待验证可行性）"""
@@ -563,15 +563,15 @@ class StorerAgent:
     def save_articles(self, articles: List[Article], storage_type: str = "local") -> bool:
         """保存文章到指定存储"""
         pass
-    
+
     def load_articles(self, filters: Dict = None) -> List[Article]:
         """从存储加载文章"""
         pass
-    
+
     def update_article(self, article_id: str, updates: Dict) -> bool:
         """更新文章信息"""
         pass
-    
+
     def delete_article(self, article_id: str) -> bool:
         """删除文章"""
         pass
@@ -584,11 +584,11 @@ class AnalyzerAgent:
     def analyze_writing_style(self, articles: List[Article]) -> StyleProfile:
         """分析写作风格"""
         pass
-    
+
     def extract_features(self, article: Article) -> ArticleFeatures:
         """提取文章特征"""
         pass
-    
+
     def generate_style_prompt(self, style_profile: StyleProfile) -> str:
         """生成风格描述提示词"""
         pass
@@ -601,11 +601,11 @@ class GeneratorAgent:
     def generate_article(self, topic: str, style_profile: StyleProfile) -> Article:
         """生成文章"""
         pass
-    
+
     def generate_reply(self, message: str, style_profile: StyleProfile) -> str:
         """生成回复"""
         pass
-    
+
     def adjust_style(self, content: str, style_profile: StyleProfile) -> str:
         """调整内容风格"""
         pass
@@ -618,15 +618,15 @@ class EmbeddingAgent:
     def generate_embeddings(self, texts: List[str]) -> List[List[float]]:
         """生成文本嵌入向量"""
         pass
-    
+
     def store_vectors(self, vectors: List[List[float]], metadata: List[Dict]) -> bool:
         """存储向量到向量数据库"""
         pass
-    
+
     def search_similar(self, query: str, top_k: int = 5) -> List[Dict]:
         """相似度搜索"""
         pass
-    
+
     def update_embeddings(self, article_ids: List[str]) -> bool:
         """更新指定文章的嵌入向量"""
         pass
@@ -639,7 +639,7 @@ class BaseAgent:
     def __init__(self, config: Dict):
         self.config = config
         self.logger = self.setup_logger()
-    
+
     def execute(self, input_data: Any) -> Any:
         """执行Agent任务"""
         try:
@@ -649,11 +649,11 @@ class BaseAgent:
         except Exception as e:
             self.logger.error(f"Agent {self.__class__.__name__} failed: {e}")
             raise
-    
+
     def _process(self, input_data: Any) -> Any:
         """子类实现具体处理逻辑"""
         raise NotImplementedError
-    
+
     def get_status(self) -> Dict:
         """获取Agent状态"""
         return {
@@ -707,26 +707,26 @@ async def _parse_content_with_images(self, html_content: str, text_content: str,
     # 1. 使用BeautifulSoup解析HTML
     soup = BeautifulSoup(html_content, 'html.parser')
     img_tags = soup.find_all('img')
-    
+
     # 2. 创建URL到锚点ID的映射
     url_to_anchor = {url: img_id for img_id, url in image_data.items()}
-    
+
     # 3. 替换图片标签为锚点
     for img_tag in img_tags:
         # 优先使用data-src属性（懒加载图片）
         img_url = img_tag.get('data-src') or img_tag.get('data-original') or img_tag.get('src')
-        
+
         if img_url and img_url.startswith('http'):
             clean_url = self._clean_image_url(img_url)
-            
+
             if clean_url in url_to_anchor:
                 img_id = url_to_anchor[clean_url]
                 anchor_id = img_id.replace('img_', '')
-                
+
                 # 在HTML中替换图片标签为锚点
                 anchor_tag = soup.new_string(f" $img_{anchor_id}$ ")
                 img_tag.replace_with(anchor_tag)
-    
+
     # 4. 返回包含锚点的文本内容
     return soup.get_text()
 ```
@@ -736,17 +736,17 @@ async def _parse_content_with_images(self, html_content: str, text_content: str,
 async def _extract_images_with_positions(self) -> Dict[str, str]:
     # 1. 使用Playwright选择器获取图片
     content_selectors = ['#js_content img', '.rich_media_content img']
-    
+
     # 2. 处理懒加载图片
     await asyncio.sleep(2)  # 等待懒加载图片加载
-    
+
     # 3. 过滤文章内容图片
     filtered_images = []
     for url in image_urls:
         clean_url = self._clean_image_url(url)
         if self._is_article_content_image(clean_url):
             filtered_images.append(clean_url)
-    
+
     # 4. 返回图片数据字典 {img_id: image_url}
     return {f"img_{i}": url for i, url in enumerate(unique_image_urls, 1)}
 ```
@@ -757,10 +757,10 @@ def _validate_image_anchors(self, content: str, image_data: Dict[str, str]) -> N
     # 1. 提取内容中的所有锚点
     anchor_pattern = r'\$img_(\d+)\$'
     content_anchors = re.findall(anchor_pattern, content)
-    
+
     # 2. 验证锚点数量与图片数据一致性
     image_ids = [img_id.replace('img_', '') for img_id in image_data.keys()]
-    
+
     # 3. 验证锚点ID与图片数据一致性
     if len(content_anchors) != len(image_ids):
         self.logger.warning(f"锚点数量不匹配: 内容中{len(content_anchors)}个，图片数据中{len(image_ids)}个")

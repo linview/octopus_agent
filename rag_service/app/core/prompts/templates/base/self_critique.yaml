@@ -23,4 +23,4 @@ template: |
   {{ context }}
 type: SelfCritiquePrompt
 desc: "Self-critique 模板，通过自我批评提高答案质量"
-version: "1.0.0" 
+version: "1.0.0"

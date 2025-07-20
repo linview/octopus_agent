@@ -32,40 +32,79 @@ dev = [
     "pytest>=8.4.0",
     "pytest-asyncio>=0.23.0",
     "pytest-cov>=4.1.0",
-    "black>=24.1.0",
-    "isort>=5.13.0",
+    "ruff>=0.3.0",
+    "pre-commit>=3.6.0",
     "mypy>=1.8.0",
-    "flake8>=7.0.0",
 ]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.black]
-line-length = 88
-target-version = ['py311']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
+# Ruff configuration - replaces black, isort, and flake8
+[tool.ruff]
+# Line length
+line-length = 120
 
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-line_length = 88
-known_first_party = ["wx_agent"]
+# Target Python version
+target-version = "py311"
 
+# Formatting configuration
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# Code checking configuration
+[tool.ruff.lint]
+# Enable pycodestyle (`E`), Pyflakes (`F`), and isort (`I`) code checking
+select = ["E", "F", "I", "N", "W", "B", "C4", "UP", "ARG", "SIM", "TID", "Q"]
+ignore = [
+    "E501",  # Line too long, handled by formatter
+    "B008",  # Do not perform function calls in argument defaults
+    "C901",  # Function too complex
+    "T201",  # Print statement
+    "T203",  # Pprint statement
+]
+
+# Allow automatic fixes
+fixable = ["ALL"]
+unfixable = []
+
+# Exclude files
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+# Force exclude all `__init__.py` files
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+# isort configuration
+[tool.ruff.lint.isort]
+known-first-party = ["wx_agent"]
+known-third-party = ["pytest", "playwright", "beautifulsoup4", "requests", "jieba", "pandas", "transformers", "torch", "loguru", "aiohttp", "pydantic", "pymongo", "chromadb", "sentence_transformers", "snownlp", "accelerate", "aiofiles"]
+
+# mypy configuration
 [tool.mypy]
 python_version = "3.11"
 warn_return_any = true
@@ -81,6 +120,7 @@ warn_no_return = true
 warn_unreachable = true
 strict_equality = true
 
+# pytest configuration
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
@@ -99,6 +139,7 @@ markers = [
     "asyncio: marks tests as asyncio tests",
 ]
 
+# Coverage configuration
 [tool.coverage.run]
 source = ["."]
 omit = [
@@ -121,4 +162,4 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
-] 
+]

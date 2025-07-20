@@ -15,11 +15,11 @@ class CrawlerAgent:
     def crawl_articles(self, account_name: str, max_count: int = 10) -> List[Article]:
         """爬取指定公众号的文章"""
         pass
-    
+
     def crawl_single_article(self, article_url: str) -> Article:
         """爬取单篇文章"""
         pass
-    
+
     def get_article_list(self, account_name: str) -> List[ArticleMeta]:
         """获取文章列表（不下载内容）"""
         pass
@@ -45,15 +45,15 @@ class StorerAgent:
     def save_articles(self, articles: List[Article], storage_type: str = "local") -> bool:
         """保存文章到指定存储"""
         pass
-    
+
     def load_articles(self, filters: Dict = None) -> List[Article]:
         """从存储加载文章"""
         pass
-    
+
     def update_article(self, article_id: str, updates: Dict) -> bool:
         """更新文章信息"""
         pass
-    
+
     def delete_article(self, article_id: str) -> bool:
         """删除文章"""
         pass
@@ -80,15 +80,15 @@ class EmbeddingAgent:
     def generate_embeddings(self, texts: List[str]) -> List[List[float]]:
         """生成文本嵌入向量"""
         pass
-    
+
     def store_vectors(self, vectors: List[List[float]], metadata: List[Dict]) -> bool:
         """存储向量到向量数据库"""
         pass
-    
+
     def search_similar(self, query: str, top_k: int = 5) -> List[Dict]:
         """相似度搜索"""
         pass
-    
+
     def update_embeddings(self, article_ids: List[str]) -> bool:
         """更新指定文章的嵌入向量"""
         pass
@@ -115,15 +115,15 @@ class AnalyzerAgent:
     def analyze_writing_style(self, articles: List[Article]) -> StyleProfile:
         """分析写作风格"""
         pass
-    
+
     def extract_features(self, article: Article) -> ArticleFeatures:
         """提取文章特征"""
         pass
-    
+
     def generate_style_prompt(self, style_profile: StyleProfile) -> str:
         """生成风格描述提示词"""
         pass
-    
+
     def classify_content(self, article: Article) -> ContentCategory:
         """内容分类"""
         pass
@@ -151,15 +151,15 @@ class GeneratorAgent:
     def generate_article(self, topic: str, style_profile: StyleProfile) -> Article:
         """生成文章"""
         pass
-    
+
     def generate_outline(self, topic: str) -> List[str]:
         """生成文章大纲"""
         pass
-    
+
     def generate_section(self, section_title: str, context: str) -> str:
         """生成文章段落"""
         pass
-    
+
     def optimize_content(self, content: str, feedback: str) -> str:
         """根据反馈优化内容"""
         pass
@@ -299,7 +299,7 @@ class BaseAgent:
     def __init__(self, config: Dict):
         self.config = config
         self.logger = self.setup_logger()
-    
+
     def execute(self, input_data: Any) -> Any:
         """执行Agent任务"""
         try:
@@ -309,11 +309,11 @@ class BaseAgent:
         except Exception as e:
             self.logger.error(f"Agent {self.__class__.__name__} failed: {e}")
             raise
-    
+
     def _process(self, input_data: Any) -> Any:
         """子类实现具体处理逻辑"""
         raise NotImplementedError
-    
+
     def get_status(self) -> Dict:
         """获取Agent状态"""
         return {
@@ -333,4 +333,4 @@ class BaseAgent:
 4. **可复用性强**: Agent可以在不同场景下组合使用
 5. **便于测试**: 每个模块可以独立测试
 
-建议按照这个架构开始实现，先从MVP阶段的4个核心Agent开始，然后逐步完善功能。 
+建议按照这个架构开始实现，先从MVP阶段的4个核心Agent开始，然后逐步完善功能。

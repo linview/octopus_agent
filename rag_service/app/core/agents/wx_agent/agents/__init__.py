@@ -7,5 +7,5 @@ Agent模块包
 from .crawler_agent import CrawlerAgent
 
 __all__ = [
-    'CrawlerAgent',
-] 
+    "CrawlerAgent",
+]

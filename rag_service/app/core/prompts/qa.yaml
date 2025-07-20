@@ -25,4 +25,4 @@ template: |
   </prompt>
 type: qa
 version: "1.0.0"
-desc: "问答模板" 
+desc: "问答模板"

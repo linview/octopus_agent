@@ -4,31 +4,18 @@
 提供命令行接口和基本功能演示
 """
 
-import asyncio
 import argparse
 import sys
 from pathlib import Path
 
-from utils.config import load_config, create_default_config_file
-from utils.logger import setup_logging, get_logger
-from core.base_agent import BaseAgent
+from utils.config import create_default_config_file, load_config
+from utils.logger import get_logger
 
 
 def create_project_structure():
     """创建项目目录结构"""
-    directories = [
-        "agents",
-        "core", 
-        "models",
-        "utils",
-        "config",
-        "data",
-        "tests",
-        "docs",
-        "dify_integration",
-        "logs"
-    ]
-    
+    directories = ["agents", "core", "models", "utils", "config", "data", "tests", "docs", "dify_integration", "logs"]
+
     for directory in directories:
         Path(directory).mkdir(exist_ok=True)
         print(f"✓ 创建目录: {directory}")
@@ -37,17 +24,17 @@ def create_project_structure():
 def init_project():
     """初始化项目"""
     print("🚀 初始化微信公众号Agent系统...")
-    
+
     # 创建目录结构
     create_project_structure()
-    
+
     # 创建默认配置文件
     try:
         create_default_config_file("config/config.json")
         print("✓ 创建默认配置文件: config/config.json")
     except Exception as e:
         print(f"✗ 创建配置文件失败: {e}")
-    
+
     # 创建环境变量模板
     env_template = """# 微信公众号Agent系统配置文件模板
 # 复制此文件为 .env 并填入实际配置
@@ -90,14 +77,14 @@ LOG_FILE=./logs/wx_agent.log
 DEBUG=true
 TEST_MODE=false
 """
-    
+
     try:
         with open(".env.template", "w", encoding="utf-8") as f:
             f.write(env_template)
         print("✓ 创建环境变量模板: .env.template")
     except Exception as e:
         print(f"✗ 创建环境变量模板失败: {e}")
-    
+
     print("\n🎉 项目初始化完成！")
     print("\n📋 下一步操作：")
     print("1. 复制 .env.template 为 .env 并配置环境变量")
@@ -109,7 +96,7 @@ TEST_MODE=false
 def test_config():
     """测试配置加载"""
     print("🔧 测试配置加载...")
-    
+
     try:
         config = load_config()
         print("✓ 配置加载成功")
@@ -117,7 +104,7 @@ def test_config():
         print(f"  - 存储类型: {config.storer.storage_type}")
         print(f"  - 分析模型: {config.analyzer.model_name}")
         print(f"  - 生成模型: {config.generator.llm_model}")
-        
+
         # 验证配置
         errors = config.validate_config()
         if errors:
@@ -126,7 +113,7 @@ def test_config():
                 print(f"  - {error}")
         else:
             print("✓ 配置验证通过")
-            
+
     except Exception as e:
         print(f"✗ 配置加载失败: {e}")
 
@@ -134,14 +121,14 @@ def test_config():
 def test_logging():
     """测试日志系统"""
     print("📝 测试日志系统...")
-    
+
     try:
         logger = get_logger("test")
         logger.info("这是一条测试日志")
         logger.warning("这是一条警告日志")
         logger.error("这是一条错误日志")
         print("✓ 日志系统测试完成")
-        
+
     except Exception as e:
         print(f"✗ 日志系统测试失败: {e}")
 
@@ -149,21 +136,20 @@ def test_logging():
 def run_tests():
     """运行测试"""
     print("🧪 运行测试...")
-    
+
     import subprocess
     import sys
-    
+
     try:
-        result = subprocess.run([sys.executable, "-m", "pytest", "tests/", "-v"], 
-                              capture_output=True, text=True)
-        
+        result = subprocess.run([sys.executable, "-m", "pytest", "tests/", "-v"], capture_output=True, text=True)
+
         if result.returncode == 0:
             print("✓ 所有测试通过")
         else:
             print("✗ 测试失败")
             print(result.stdout)
             print(result.stderr)
-            
+
     except Exception as e:
         print(f"✗ 运行测试失败: {e}")
 
@@ -171,14 +157,14 @@ def run_tests():
 def show_status():
     """显示系统状态"""
     print("📊 系统状态...")
-    
+
     try:
         config = load_config()
-        
+
         print(f"配置版本: {config.config_version}")
         print(f"调试模式: {config.debug}")
         print(f"测试模式: {config.test_mode}")
-        
+
         # 检查目录
         directories = ["agents", "core", "models", "utils", "config", "data", "tests", "docs"]
         for directory in directories:
@@ -186,7 +172,7 @@ def show_status():
                 print(f"✓ {directory}/")
             else:
                 print(f"✗ {directory}/ (缺失)")
-                
+
     except Exception as e:
         print(f"✗ 获取状态失败: {e}")
 
@@ -194,11 +180,12 @@ def show_status():
 def main():
     """主函数"""
     parser = argparse.ArgumentParser(description="微信公众号Agent系统")
-    parser.add_argument("command", choices=["init", "test-config", "test-logging", "test", "status"], 
-                       help="要执行的命令")
-    
+    parser.add_argument(
+        "command", choices=["init", "test-config", "test-logging", "test", "status"], help="要执行的命令"
+    )
+
     args = parser.parse_args()
-    
+
     if args.command == "init":
         init_project()
     elif args.command == "test-config":
@@ -215,4 +202,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()

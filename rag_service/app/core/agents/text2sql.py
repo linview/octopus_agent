@@ -1,10 +1,10 @@
 import os
 import re
 
-from typing import List, Dict, ClassVar, Union
+from typing import ClassVar, Union
 from dotenv import load_dotenv
 
-from langchain.agents import Tool, AgentExecutor, LLMSingleActionAgent
+from langchain.agents import AgentExecutor, LLMSingleActionAgent
 from langchain.prompts import StringPromptTemplate
 from langchain.chains import LLMChain
 from langchain_community.chat_models import ChatOpenAI
@@ -18,6 +18,7 @@ MODEL_NAME = "qwen-plus"
 MAX_TOKENS = 1024
 
 load_dotenv()
+
 
 # 定义提示模板
 class SQLPromptTemplate(StringPromptTemplate):
@@ -35,9 +36,12 @@ class SQLPromptTemplate(StringPromptTemplate):
     def format(self, **kwargs) -> str:
         return self.template.format(**kwargs)
 
+
 # test2swql Agent prompt template
 class AgentPromptTemplate(StringPromptTemplate):
-    template: ClassVar[str] = """你是一个SQL查询助手。请帮助用户将自然语言转换为SQL查询。
+    template: ClassVar[
+        str
+    ] = """你是一个SQL查询助手。请帮助用户将自然语言转换为SQL查询。
 
 <input>
 用户查询: {query}
@@ -69,10 +73,11 @@ Final Answer: 最终的SQL查询结果
     def format(self, **kwargs) -> str:
         return self.template.format(**kwargs)
 
+
 # tool: SQL generator
 class SQLGeneratorTool(BaseTool):
-    tool_name : ClassVar[str] = "sql_generator"
-    description : ClassVar[str] = "将自然语言查询转换为SQL语句"
+    tool_name: ClassVar[str] = "sql_generator"
+    description: ClassVar[str] = "将自然语言查询转换为SQL语句"
 
     @timer
     def _run(self, query: str) -> str:
@@ -84,24 +89,28 @@ class SQLGeneratorTool(BaseTool):
                 temperature=0,
                 max_tokens=MAX_TOKENS,
                 openai_api_key=os.getenv("DASHSCOPE_API_KEY"),
-                openai_api_base=os.getenv("DASHSCOPE_API_URL")
+                openai_api_base=os.getenv("DASHSCOPE_API_URL"),
             ),
             prompt=prompt,
-            stop=["\n</output>"]
+            stop=["\n</output>"],
         )
-        tools_description = "\n".join([
-            f"{tool.tool_name}: {tool.description}" for tool in [SQLGeneratorTool, SQLEvaluatorTool]
-        ])
+        tools_description = "\n".join(
+            [
+                f"{tool.tool_name}: {tool.description}"
+                for tool in [SQLGeneratorTool, SQLEvaluatorTool]
+            ]
+        )
         return chain.run(query=query, tools=tools_description)
 
     @timer
     async def _arun(self, query: str) -> str:
         raise NotImplementedError("暂不支持异步操作")
 
+
 # tool: SQL evaluator
 class SQLEvaluatorTool(BaseTool):
-    tool_name : ClassVar[str] = "sql_evaluator"
-    description : ClassVar[str] = "评估生成的SQL语句是否正确"
+    tool_name: ClassVar[str] = "sql_evaluator"
+    description: ClassVar[str] = "评估生成的SQL语句是否正确"
 
     @timer
     def _run(self, sql: str) -> str:
@@ -113,6 +122,7 @@ class SQLEvaluatorTool(BaseTool):
     async def _arun(self, sql: str) -> str:
         raise NotImplementedError("暂不支持异步操作")
 
+
 # 定义输出解析器
 class SQLAgentOutputParser(AgentOutputParser):
     def parse(self, text: str) -> Union[AgentAction, AgentFinish]:
@@ -120,33 +130,37 @@ class SQLAgentOutputParser(AgentOutputParser):
         if "Final Answer:" in text:
             return AgentFinish(
                 return_values={"output": text.split("Final Answer:")[-1].strip()},
-                log=text
+                log=text,
             )
-        
+
         # 解析动作和输入
-        action_match = re.search(r"Action: (.*?)[\n]*Action Input: (.*)", text, re.DOTALL)
+        action_match = re.search(
+            r"Action: (.*?)[\n]*Action Input: (.*)", text, re.DOTALL
+        )
         if not action_match:
-            return AgentFinish(
-                return_values={"output": "无法解析动作"},
-                log=text
-            )
-        
+            return AgentFinish(return_values={"output": "无法解析动作"}, log=text)
+
         # parse tool name and inputs
         action = action_match.group(1).strip()
         action_input = action_match.group(2).strip()
-        
+
         return AgentAction(tool=action, tool_input=action_input, log=text)
+
 
 # 创建Agent
 def create_sql_agent():
     tools = [
-        SQLGeneratorTool(name=SQLGeneratorTool.tool_name, description=SQLGeneratorTool.description),
-        SQLEvaluatorTool(name=SQLEvaluatorTool.tool_name, description=SQLEvaluatorTool.description)
+        SQLGeneratorTool(
+            name=SQLGeneratorTool.tool_name, description=SQLGeneratorTool.description
+        ),
+        SQLEvaluatorTool(
+            name=SQLEvaluatorTool.tool_name, description=SQLEvaluatorTool.description
+        ),
     ]
 
     # 创建Agent提示模板
     prompt = AgentPromptTemplate(input_variables=["query", "tools"])
-    
+
     # 创建Agent
     agent = LLMSingleActionAgent(
         llm_chain=LLMChain(
@@ -155,30 +169,25 @@ def create_sql_agent():
                 temperature=0,
                 max_tokens=MAX_TOKENS,
                 openai_api_key=os.getenv("DASHSCOPE_API_KEY"),
-                openai_api_base=os.getenv("DASHSCOPE_API_URL")
+                openai_api_base=os.getenv("DASHSCOPE_API_URL"),
             ),
-            prompt=prompt
+            prompt=prompt,
         ),
         output_parser=SQLAgentOutputParser(),
         stop=["\n</output>"],
-        allowed_tools=[tool.name for tool in tools]
+        allowed_tools=[tool.name for tool in tools],
     )
 
-    return AgentExecutor.from_agent_and_tools(
-        agent=agent,
-        tools=tools,
-        verbose=True
-    )
+    return AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True)
 
 
 if __name__ == "__main__":
     agent = create_sql_agent()
-    
+
     # 工具列表
-    tools_description = "\n".join([
-        f"{tool.name}: {tool.description}"
-        for tool in agent.tools
-    ])
+    tools_description = "\n".join(
+        [f"{tool.name}: {tool.description}" for tool in agent.tools]
+    )
 
     # 测试用例
     test_query0 = "查询所有用户的姓名和邮箱"
@@ -192,16 +201,16 @@ create t2(id int, name chars, gender chars, grade int);
 我需要找到在五年级的小明同学都选了哪些课程，并按照开始时间逆序排列
 
 """
-  
-    test_query2 = test_query1 + """
+
+    test_query2 = (
+        test_query1
+        + """
 在获取到小明最早开始的课程的名称后，反查还有哪些同学选了同一个课程，且跟小明同一时间上课
 
 """
+    )
 
     for test in [test_query0, test_query1, test_query2]:
-        result = agent.run(
-            query=test_query2,
-            tools=tools_description
-        )
-        print(result) 
+        result = agent.run(query=test_query2, tools=tools_description)
+        print(result)
     print("end-of-test")

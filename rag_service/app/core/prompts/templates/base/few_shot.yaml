@@ -17,4 +17,4 @@ template: |
   请开始你的回答：
 type: FewShotPrompt
 desc: "Few-shot Learning 模板，通过示例引导模型学习特定模式"
-version: "1.0.0" 
+version: "1.0.0"

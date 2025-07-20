@@ -346,4 +346,4 @@ MIT License
 - [Playwright](https://playwright.dev/) - 现代浏览器自动化
 - [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) - HTML解析
 - [pytest](https://docs.pytest.org/) - Python测试框架
-- [uv](https://github.com/astral-sh/uv) - 快速Python包管理器 
+- [uv](https://github.com/astral-sh/uv) - 快速Python包管理器

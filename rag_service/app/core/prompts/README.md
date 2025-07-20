@@ -146,4 +146,4 @@ role_templates = prompt_manager.get_templates_by_type("RoleBasedPrompt")
    - 定期检查模板有效性
    - 及时更新模板内容
    - 保持版本信息准确
-   - 维护模板文档 
+   - 维护模板文档

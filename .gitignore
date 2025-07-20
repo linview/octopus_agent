@@ -27,3 +27,5 @@ htmlcov/
 # 排除IDE文件
 .idea/
 *.sublime-*
+
+**/.pre-commit-config.yaml

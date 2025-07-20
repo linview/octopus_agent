@@ -137,4 +137,4 @@ uv sync --dev --upgrade
 uv add <package-name> --upgrade
 ```
 
-注意：本项目使用 `pyproject.toml` 进行依赖管理，不再支持 `requirements.txt`。 
+注意：本项目使用 `pyproject.toml` 进行依赖管理，不再支持 `requirements.txt`。

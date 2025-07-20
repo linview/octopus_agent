@@ -33,7 +33,7 @@ def init_agent_architecture():
         'tests/',            # 测试文件
         'dify_integration/'  # Dify集成
     ])
-    
+
     # 2. 创建Agent基类
     create_base_agent_class({
         'execute': '统一执行接口',
@@ -41,7 +41,7 @@ def init_agent_architecture():
         'get_status': '获取Agent状态',
         'setup_logger': '日志配置'
     })
-    
+
     # 3. 配置文件模板
     create_config_template({
         'agents': {
@@ -56,7 +56,7 @@ def init_agent_architecture():
             'api_key': 'your_api_key'
         }
     })
-    
+
     # 4. 数据模型定义
     create_data_models([
         'Article',           # 文章模型
@@ -172,19 +172,19 @@ class CrawlerAgent(BaseAgent):
         # 1. 解析输入参数
         article_urls = input_data.get('article_urls', [])  # 文章URL列表
         max_count = input_data.get('max_count', 10)
-        
+
         # 2. 验证输入
         if not article_urls:
             raise ValueError("必须提供article_urls")
-        
+
         # 3. 限制爬取数量
         article_urls = article_urls[:max_count]
-        
+
         # 4. 爬取文章
         articles = await self.crawl_articles_by_urls(article_urls)
-        
+
         return articles
-    
+
     async def crawl_articles_by_urls(self, article_urls: List[str]) -> List[Article]:
         """通过文章URL列表爬取文章"""
         articles = []
@@ -196,23 +196,23 @@ class CrawlerAgent(BaseAgent):
                 self.logger.error(f"爬取文章失败 {url}: {str(e)}")
                 continue
         return articles
-    
+
     async def crawl_single_article(self, article_url: str) -> Article:
         """爬取单篇文章"""
         # 1. 启动浏览器
         browser = await self.launch_browser()
-        
+
         # 2. 访问文章页面
         await self.visit_article_page(article_url)
-        
+
         # 3. 解析文章内容（包含图片锚点处理）
         article = await self.parse_article_content()
-        
+
         # 4. 下载媒体文件
         await self.download_media(article)
-        
+
         return article
-    
+
     # 🎯 新增：图片锚点处理功能
     async def _parse_content_with_images(self, html_content: str, text_content: str, image_data: Dict[str, str]) -> str:
         """解析HTML内容，将图片URL替换为锚点"""
@@ -221,20 +221,20 @@ class CrawlerAgent(BaseAgent):
         # 3. 过滤非文章内容图片
         # 4. 在HTML中替换图片标签为锚点
         # 5. 返回包含锚点的文本内容
-    
+
     async def _extract_images_with_positions(self) -> Dict[str, str]:
         """提取文章正文中的图片URL和位置信息"""
         # 1. 使用Playwright选择器获取图片
         # 2. 处理懒加载图片
         # 3. 过滤文章内容图片
         # 4. 返回图片数据字典 {img_id: image_url}
-    
+
     def _validate_image_anchors(self, content: str, image_data: Dict[str, str]) -> None:
         """验证内容中的锚点与图片数据的一致性"""
         # 1. 提取内容中的所有锚点
         # 2. 验证锚点数量与图片数据一致性
         # 3. 验证锚点ID与图片数据一致性
-    
+
     # ⚠️ 待验证：RSS方案可行性
     # async def get_urls_from_rss(self, rss_url: str) -> List[str]:
     #     """从RSS订阅源获取文章URL（待验证可行性）"""
@@ -349,7 +349,7 @@ class StorerAgent(BaseAgent):
         # 1. 解析输入参数
         articles = input_data.get('articles', [])
         storage_type = input_data.get('storage_type', 'local')
-        
+
         # 2. 根据存储类型选择后端
         if storage_type == 'local':
             return self.save_to_local(articles)
@@ -357,25 +357,25 @@ class StorerAgent(BaseAgent):
             return self.save_to_mongodb(articles)
         else:
             raise ValueError(f"Unsupported storage type: {storage_type}")
-    
+
     def save_to_local(self, articles: List[Article]) -> bool:
         # 1. 生成文章ID
         for article in articles:
             article.article_id = self.generate_article_id(article)
-        
+
         # 2. 保存文章JSON
         for article in articles:
             self.save_json(article, f"data/articles/{article.article_id}.json")
-        
+
         # 3. 下载并保存图片
         for article in articles:
             self.save_images(article.images, f"data/images/{article.article_id}/")
-        
+
         # 4. 更新文章索引
         self.update_article_index(articles)
-        
+
         return True
-    
+
     def load_articles(self, filters: Dict = None) -> List[Article]:
         # 从存储加载文章
         # 支持过滤条件
@@ -422,7 +422,7 @@ class AnalyzerAgent(BaseAgent):
         # 1. 解析输入参数
         articles = input_data.get('articles', [])
         analysis_type = input_data.get('analysis_type', 'style')
-        
+
         # 2. 根据分析类型执行不同功能
         if analysis_type == 'style':
             return self.analyze_writing_style(articles)
@@ -430,27 +430,27 @@ class AnalyzerAgent(BaseAgent):
             return self.extract_features(articles)
         else:
             raise ValueError(f"Unsupported analysis type: {analysis_type}")
-    
+
     def analyze_writing_style(self, articles: List[Article]) -> StyleProfile:
         # 1. 分析词汇特征
         vocabulary = self.analyze_vocabulary(articles)
-        
+
         # 2. 分析句式结构
         sentence_structure = self.analyze_sentence_structure(articles)
-        
+
         # 3. 分析情感倾向
         emotion_tone = self.analyze_emotion_tone(articles)
-        
+
         # 4. 分析写作习惯
         writing_habits = self.analyze_writing_habits(articles)
-        
+
         return StyleProfile(
             vocabulary=vocabulary,
             sentence_structure=sentence_structure,
             emotion_tone=emotion_tone,
             writing_habits=writing_habits
         )
-    
+
     def generate_style_prompt(self, style_profile: StyleProfile) -> str:
         # 根据风格特征生成提示词
         description = "你是一个专业的公众号作者，具有以下写作风格特征：\n"
@@ -491,7 +491,7 @@ class GeneratorAgent(BaseAgent):
         topic = input_data.get('topic')
         style_profile = input_data.get('style_profile')
         generation_type = input_data.get('generation_type', 'article')
-        
+
         # 2. 根据生成类型执行不同功能
         if generation_type == 'article':
             return self.generate_article(topic, style_profile)
@@ -499,17 +499,17 @@ class GeneratorAgent(BaseAgent):
             return self.generate_outline(topic)
         else:
             raise ValueError(f"Unsupported generation type: {generation_type}")
-    
+
     def generate_article(self, topic: str, style_profile: StyleProfile) -> Article:
         # 1. 构建个性化提示词
         prompt = self.build_article_prompt(topic, style_profile)
-        
+
         # 2. 调用LLM生成内容
         content = self.llm.generate(prompt)
-        
+
         # 3. 后处理优化
         optimized_content = self.post_process(content)
-        
+
         # 4. 构建文章对象
         return Article(
             title=self.extract_title(optimized_content),
@@ -517,21 +517,21 @@ class GeneratorAgent(BaseAgent):
             topic=topic,
             generated_at=datetime.now()
         )
-    
+
     def build_article_prompt(self, topic: str, style_profile: StyleProfile) -> str:
         # 1. 获取风格描述
         style_description = style_profile.to_prompt()
-        
+
         # 2. 选择示例文章
         examples = self.select_examples(topic, style_profile)
-        
+
         # 3. 构建完整提示词
         prompt = f"""
         {style_description}
-        
+
         请参考以下示例文章的风格：
         {self.format_examples(examples)}
-        
+
         请以上述风格，生成一篇关于"{topic}"的公众号文章。
         要求：
         1. 标题要吸引人，符合公众号风格
@@ -578,49 +578,49 @@ class AgentManager:
             'analyzer': AnalyzerAgent(config),
             'generator': GeneratorAgent(config)
         }
-    
+
     def execute_data_collection_workflow(self, account_name: str) -> Dict:
         # 1. CrawlerAgent爬取文章
         crawler_result = self.agents['crawler'].execute({
             'account_name': account_name,
             'max_count': 10
         })
-        
+
         # 2. StorerAgent保存文章
         storer_result = self.agents['storer'].execute({
             'articles': crawler_result,
             'storage_type': 'local'
         })
-        
+
         # 3. AnalyzerAgent分析特征
         analyzer_result = self.agents['analyzer'].execute({
             'articles': crawler_result,
             'analysis_type': 'style'
         })
-        
+
         return {
             'articles_count': len(crawler_result),
             'style_profile': analyzer_result,
             'status': 'completed'
         }
-    
+
     def execute_content_generation_workflow(self, topic: str) -> Article:
         # 1. 加载风格特征
         style_profile = self.load_style_profile()
-        
+
         # 2. GeneratorAgent生成文章
         generator_result = self.agents['generator'].execute({
             'topic': topic,
             'style_profile': style_profile,
             'generation_type': 'article'
         })
-        
+
         # 3. StorerAgent保存生成的文章
         self.agents['storer'].execute({
             'articles': [generator_result],
             'storage_type': 'local'
         })
-        
+
         return generator_result
 ```
 
@@ -652,22 +652,22 @@ uv add asyncio aiofiles
 def mvp_validation_workflow():
     # 1. 端到端测试
     test_full_pipeline()
-    
+
     # 2. 各Agent功能验证
     test_crawler_agent()
     test_storer_agent()
     test_analyzer_agent()
     test_generator_agent()
-    
+
     # 3. Agent协作验证
     test_agent_collaboration()
-    
+
     # 4. 性能测试
     test_performance()
-    
+
     # 5. 错误处理测试
     test_error_scenarios()
-    
+
     # 6. 输出测试报告
     generate_mvp_report()
 
@@ -677,13 +677,13 @@ def test_full_pipeline():
     result = agent_manager.execute_data_collection_workflow(account_name)
     assert result['status'] == 'completed'
     assert result['articles_count'] > 0
-    
+
     # 2. 内容生成流程测试
     topic = "测试主题"
     article = agent_manager.execute_content_generation_workflow(topic)
     assert article.title is not None
     assert len(article.content) > 500
-    
+
     # 3. 验证生成质量
     validate_generated_content(article)
 ```
@@ -729,7 +729,7 @@ uv run pytest --cov=agents --cov-report=html
 - **GeneratorAgent**: RAG增强生成
 - **Dify平台集成**: 工具函数和工作流集成
 
-### Sprint#3: 生产阶段 (2-3周)  
+### Sprint#3: 生产阶段 (2-3周)
 - **性能优化**: Agent间通信优化
 - **监控告警**: 各Agent状态监控
 - **错误处理**: 完善异常处理机制

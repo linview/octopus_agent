@@ -505,3 +505,65 @@ features
 2025-07-19 12:49:54 | INFO     | agents.crawler_agent:_cleanup:772 | 资源清理完成
 2025-07-19 12:49:54 | INFO     | core.base_agent:execute:78 | CrawlerAgent 执行成功，耗时: 17.75秒，结果类型: <class 'list'>
 2025-07-19 12:49:54 | INFO     | agents.crawler_agent:_cleanup:772 | 资源清理完成
+2025-07-20 15:35:59 | INFO     | core.base_agent:execute:63 | 开始执行 CrawlerAgent，输入数据: <class 'dict'>
+2025-07-20 15:35:59 | INFO     | agents.crawler_agent:_process:47 | 开始爬取文章，目标数量: 1
+2025-07-20 15:35:59 | INFO     | agents.crawler_agent:crawl_articles_by_urls:79 | 爬取文章 1/1: https://mp.weixin.qq.com/s/8xJcEI1Mx1lYeCvQsK7t9Q
+2025-07-20 15:35:59 | INFO     | agents.crawler_agent:_launch_browser:462 | 启动浏览器...
+2025-07-20 15:36:04 | INFO     | agents.crawler_agent:_launch_browser:485 | 浏览器启动成功
+2025-07-20 15:36:07 | INFO     | agents.crawler_agent:crawl_single_article:137 | 正在访问文章页面...
+2025-07-20 15:36:16 | INFO     | agents.crawler_agent:crawl_single_article:149 | 页面标题: 编程助手怎么选？左手lingma，右手cursor
+2025-07-20 15:36:17 | INFO     | agents.crawler_agent:_parse_article_content:246 | 找到标题: 编程助手怎么选？左手lingma，右手cursor (选择器: title)
+2025-07-20 15:36:17 | INFO     | agents.crawler_agent:_parse_article_content:269 | 找到内容 (选择器: #js_content)
+2025-07-20 15:36:17 | INFO     | agents.crawler_agent:_extract_images_with_positions:655 | 找到 9 张图片 (选择器: #js_content img)
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_extract_images_with_positions:672 | 懒加载后总图片数量: 9
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_extract_images_with_positions:686 | 过滤后文章内容图片数量: 9
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_extract_images_with_positions:697 | 去重后图片数量: 7
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:558 | 找到 7 个图片标签
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:572 | 图片数据中的URL数量: 7
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 1: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 2: https://mmbiz.qpic.cn/mmbiz_jpg/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 3: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 4: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 5: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 6: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 7: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_content_with_images:602 | 成功替换 7 个图片标签
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_validate_image_anchors:391 | 锚点验证完成: 内容中7个锚点，图片数据中7个图片
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_article_content:304 | 找到发布时间: 2025年06月19日 10:27 (选择器: #publish_time)
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:_parse_article_content:329 | 找到作者: 琳时闲话 (选择器: #js_name)
+2025-07-20 15:36:19 | INFO     | agents.crawler_agent:crawl_single_article:159 | 文章爬取成功: 编程助手怎么选？左手lingma，右手cursor
+2025-07-20 15:36:23 | INFO     | agents.crawler_agent:_process:55 | 爬取完成，共获取 1 篇文章
+2025-07-20 15:36:25 | INFO     | agents.crawler_agent:_cleanup:759 | 资源清理完成
+2025-07-20 15:36:25 | INFO     | core.base_agent:execute:72 | CrawlerAgent 执行成功，耗时: 26.52秒，结果类型: <class 'list'>
+2025-07-20 15:36:25 | INFO     | agents.crawler_agent:_cleanup:759 | 资源清理完成
+2025-07-20 15:38:02 | INFO     | core.base_agent:execute:63 | 开始执行 CrawlerAgent，输入数据: <class 'dict'>
+2025-07-20 15:38:02 | INFO     | agents.crawler_agent:_process:47 | 开始爬取文章，目标数量: 1
+2025-07-20 15:38:02 | INFO     | agents.crawler_agent:crawl_articles_by_urls:79 | 爬取文章 1/1: https://mp.weixin.qq.com/s/8xJcEI1Mx1lYeCvQsK7t9Q
+2025-07-20 15:38:02 | INFO     | agents.crawler_agent:_launch_browser:462 | 启动浏览器...
+2025-07-20 15:38:06 | INFO     | agents.crawler_agent:_launch_browser:485 | 浏览器启动成功
+2025-07-20 15:38:07 | INFO     | agents.crawler_agent:crawl_single_article:137 | 正在访问文章页面...
+2025-07-20 15:38:14 | INFO     | agents.crawler_agent:crawl_single_article:149 | 页面标题: 编程助手怎么选？左手lingma，右手cursor
+2025-07-20 15:38:14 | INFO     | agents.crawler_agent:_parse_article_content:246 | 找到标题: 编程助手怎么选？左手lingma，右手cursor (选择器: title)
+2025-07-20 15:38:15 | INFO     | agents.crawler_agent:_parse_article_content:269 | 找到内容 (选择器: #js_content)
+2025-07-20 15:38:15 | INFO     | agents.crawler_agent:_extract_images_with_positions:655 | 找到 9 张图片 (选择器: #js_content img)
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_extract_images_with_positions:672 | 懒加载后总图片数量: 9
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_extract_images_with_positions:686 | 过滤后文章内容图片数量: 9
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_extract_images_with_positions:697 | 去重后图片数量: 7
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:558 | 找到 7 个图片标签
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:572 | 图片数据中的URL数量: 7
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 1: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 2: https://mmbiz.qpic.cn/mmbiz_jpg/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 3: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 4: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 5: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 6: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:595 | 替换图片 7: https://mmbiz.qpic.cn/mmbiz_png/TNC7EgtFiaEBBMyjpv...
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_content_with_images:602 | 成功替换 7 个图片标签
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_validate_image_anchors:391 | 锚点验证完成: 内容中7个锚点，图片数据中7个图片
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_article_content:304 | 找到发布时间: 2025年06月19日 10:27 (选择器: #publish_time)
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:_parse_article_content:329 | 找到作者: 琳时闲话 (选择器: #js_name)
+2025-07-20 15:38:17 | INFO     | agents.crawler_agent:crawl_single_article:159 | 文章爬取成功: 编程助手怎么选？左手lingma，右手cursor
+2025-07-20 15:38:19 | INFO     | agents.crawler_agent:_process:55 | 爬取完成，共获取 1 篇文章
+2025-07-20 15:38:20 | INFO     | agents.crawler_agent:_cleanup:759 | 资源清理完成
+2025-07-20 15:38:20 | INFO     | core.base_agent:execute:72 | CrawlerAgent 执行成功，耗时: 17.80秒，结果类型: <class 'list'>
+2025-07-20 15:38:20 | INFO     | agents.crawler_agent:_cleanup:759 | 资源清理完成
