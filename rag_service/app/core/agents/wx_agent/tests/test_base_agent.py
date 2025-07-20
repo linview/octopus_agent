@@ -35,7 +35,7 @@ class TestFailingAgent(AsyncBaseAgent):
     async def _process(self, input_data: Any = None) -> Any:
         """总是失败的处理逻辑"""
 
-        raise Exception("Test error with input_data: %s" % input_data)
+        raise Exception(f"Test error with input_data: {input_data}")
 
 
 @pytest.fixture

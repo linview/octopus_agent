@@ -12,6 +12,7 @@ from typing import Any
 
 from playwright.async_api import Browser, Page, async_playwright
 
+from config.config import ConfigManager, CrawlerConfig
 from core.base_agent import AsyncBaseAgent
 from models.article import Article, ArticleFeatures
 from utils.exceptions import CrawlerError
@@ -20,11 +21,23 @@ from utils.exceptions import CrawlerError
 class CrawlerAgent(AsyncBaseAgent):
     """微信公众号文章爬虫Agent"""
 
-    def __init__(self, config: dict[str, Any]):
-        super().__init__(config)
+    def __init__(self, config: CrawlerConfig | None = None):
+        """
+        初始化爬虫Agent
+
+        Args:
+            config: CrawlerConfig实例，如果为None则使用默认配置
+        """
+        # 使用默认配置或传入的配置
+        if config is None:
+            config = ConfigManager().get_crawler_config()
+
+        # 将CrawlerConfig转换为字典传递给父类
+        super().__init__(config.model_dump())
+
         self.browser: Browser | None = None
         self.page: Page | None = None
-        self.crawler_config = self.config.get("crawler", {})
+        self.crawler_config = config
 
     async def _process(self, input_data: dict) -> list[Article]:
         """
@@ -39,7 +52,7 @@ class CrawlerAgent(AsyncBaseAgent):
         try:
             # 1. 解析输入参数
             article_urls = input_data.get("article_urls", [])
-            max_count = input_data.get("max_count", self.crawler_config.get("max_articles", 10))
+            max_count = input_data.get("max_count", self.crawler_config.max_articles)
 
             if not article_urls:
                 raise CrawlerError("article_urls is required")
@@ -55,9 +68,13 @@ class CrawlerAgent(AsyncBaseAgent):
             self.logger.info(f"爬取完成，共获取 {len(articles)} 篇文章")
             return articles
 
-        except Exception as e:
+        except (RuntimeError, ValueError, OSError) as e:
             self.logger.error(f"爬虫执行失败: {str(e)}")
             raise
+        except Exception as e:
+            # 捕获其他未预期的异常
+            self.logger.error(f"爬虫执行出现未预期错误: {str(e)}")
+            raise CrawlerError(f"爬虫执行失败: {str(e)}") from e
         finally:
             # 清理资源
             await self._cleanup()
@@ -86,11 +103,15 @@ class CrawlerAgent(AsyncBaseAgent):
                 articles.append(article)
 
                 # 随机延迟，避免被反爬
-                delay = self.crawler_config.get("delay", 2.0)
+                delay = self.crawler_config.delay
                 await asyncio.sleep(delay + random.uniform(0, 1))
 
-            except Exception as e:
+            except (RuntimeError, ValueError, OSError, TimeoutError) as e:
                 self.logger.error(f"爬取文章失败 {url}: {str(e)}")
+                continue
+            except Exception as e:
+                # 捕获其他未预期的异常
+                self.logger.error(f"爬取文章出现未预期错误 {url}: {str(e)}")
                 continue
 
         return articles
@@ -118,7 +139,7 @@ class CrawlerAgent(AsyncBaseAgent):
 
             # 4. 设置用户代理
             user_agents = [
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                self.crawler_config.user_agent,
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             ]
@@ -137,9 +158,12 @@ class CrawlerAgent(AsyncBaseAgent):
             self.logger.info("正在访问文章页面...")
 
             try:
-                await self.page.goto(article_url, wait_until="domcontentloaded", timeout=60000)
-            except Exception as e:
+                timeout_ms = self.crawler_config.timeout * 1000
+                await self.page.goto(article_url, wait_until="domcontentloaded", timeout=timeout_ms)
+            except TimeoutError as e:
                 self.logger.warning(f"页面加载超时，尝试继续解析: {str(e)}")
+            except (RuntimeError, OSError) as e:
+                self.logger.warning(f"页面加载失败，尝试继续解析: {str(e)}")
 
             # 6. 等待页面加载完成
             await asyncio.sleep(3)
@@ -205,7 +229,7 @@ class CrawlerAgent(AsyncBaseAgent):
             # 如果刷新成功，尝试解析
             return await self._parse_article_content()
 
-        except Exception as e:
+        except (RuntimeError, OSError, TimeoutError) as e:
             return {
                 "title": "反爬虫处理失败",
                 "content": f"处理反爬虫检测时出错: {str(e)}",
@@ -245,7 +269,7 @@ class CrawlerAgent(AsyncBaseAgent):
                     if title and title != "未知标题" and len(title) > 5:
                         self.logger.info(f"找到标题: {title} (选择器: {selector})")
                         break
-                except Exception as e:
+                except (RuntimeError, OSError, TimeoutError) as e:
                     self.logger.debug(f"标题选择器 {selector} 失败: {str(e)}")
                     continue
 
@@ -268,19 +292,24 @@ class CrawlerAgent(AsyncBaseAgent):
                         if content and len(content.strip()) > 50:  # 确保内容不为空
                             self.logger.info(f"找到内容 (选择器: {selector})")
 
-                            # 先提取图片数据
-                            image_data = await self._extract_images_with_positions()
+                            # 根据配置决定是否提取图片
+                            if self.crawler_config.save_images:
+                                # 先提取图片数据
+                                image_data = await self._extract_images_with_positions()
 
-                            # 解析HTML内容，提取图片位置信息
-                            content_with_images = await self._parse_content_with_images(
-                                html_content, content, image_data
-                            )
+                                # 解析HTML内容，提取图片位置信息
+                                content_with_images = await self._parse_content_with_images(
+                                    html_content, content, image_data
+                                )
 
-                            # 验证锚点与图片数据的一致性
-                            self._validate_image_anchors(content_with_images, image_data)
+                                # 验证锚点与图片数据的一致性
+                                self._validate_image_anchors(content_with_images, image_data)
+                            else:
+                                self.logger.info("图片保存已禁用，跳过图片提取")
+                                content_with_images = content
 
                             break
-                except Exception as e:
+                except (RuntimeError, OSError, TimeoutError) as e:
                     self.logger.debug(f"内容选择器 {selector} 失败: {str(e)}")
                     continue
 
@@ -305,7 +334,7 @@ class CrawlerAgent(AsyncBaseAgent):
                             break
                     if publish_time:
                         break
-                except Exception as e:
+                except (RuntimeError, OSError, TimeoutError) as e:
                     self.logger.debug(f"时间选择器 {selector} 失败: {str(e)}")
                     continue
 
@@ -330,7 +359,7 @@ class CrawlerAgent(AsyncBaseAgent):
                             break
                     if author and author != "未知作者":
                         break
-                except Exception as e:
+                except (RuntimeError, OSError, TimeoutError) as e:
                     self.logger.debug(f"作者选择器 {selector} 失败: {str(e)}")
                     continue
 
@@ -346,7 +375,7 @@ class CrawlerAgent(AsyncBaseAgent):
                 "html_length": len(page_html),
             }
 
-        except Exception as e:
+        except (RuntimeError, OSError, TimeoutError, ValueError) as e:
             self.logger.error(f"解析文章内容失败: {str(e)}")
             return {
                 "title": "解析失败",
@@ -390,7 +419,7 @@ class CrawlerAgent(AsyncBaseAgent):
 
             self.logger.info(f"锚点验证完成: 内容中{len(content_anchors)}个锚点，图片数据中{len(image_ids)}个图片")
 
-        except Exception as e:
+        except (ValueError, RuntimeError) as e:
             self.logger.error(f"锚点验证失败: {str(e)}")
 
     def _convert_to_article(self, article_data: dict[str, Any]) -> Article:
@@ -440,7 +469,7 @@ class CrawlerAgent(AsyncBaseAgent):
 
             return article
 
-        except Exception as e:
+        except (ValueError, RuntimeError, TypeError) as e:
             self.logger.error(f"转换Article对象失败: {str(e)}")
             # 返回一个基本的Article对象
             return Article(
@@ -465,12 +494,14 @@ class CrawlerAgent(AsyncBaseAgent):
             playwright = await async_playwright().start()
 
             # 获取浏览器配置
-            headless = self.crawler_config.get("headless", True)
+            headless = self.crawler_config.headless
+            browser_type = self.crawler_config.browser_type
+            proxy = self.crawler_config.proxy
 
-            # 启动浏览器
-            self.browser = await playwright.chromium.launch(
-                headless=headless,
-                args=[
+            # 准备启动参数
+            launch_args = {
+                "headless": headless,
+                "args": [
                     "--no-sandbox",
                     "--disable-setuid-sandbox",
                     "--disable-dev-shm-usage",
@@ -481,12 +512,29 @@ class CrawlerAgent(AsyncBaseAgent):
                     "--disable-web-security",
                     "--disable-features=VizDisplayCompositor",
                 ],
-            )
+            }
 
-            self.logger.info("浏览器启动成功")
+            # 添加代理设置
+            if proxy:
+                launch_args["proxy"] = {"server": proxy}
+                self.logger.info(f"使用代理: {proxy}")
 
-        except CrawlerError as e:
+            # 根据浏览器类型启动
+            if browser_type == "chromium":
+                self.browser = await playwright.chromium.launch(**launch_args)
+            elif browser_type == "firefox":
+                self.browser = await playwright.firefox.launch(**launch_args)
+            elif browser_type == "webkit":
+                self.browser = await playwright.webkit.launch(**launch_args)
+            else:
+                self.logger.warning(f"不支持的浏览器类型: {browser_type}，使用chromium")
+                self.browser = await playwright.chromium.launch(**launch_args)
+
+            self.logger.info(f"浏览器启动成功 (类型: {browser_type})")
+
+        except RuntimeError as e:
             self.logger.error(f"浏览器启动失败: {str(e)}")
+            raise CrawlerError(f"浏览器启动失败: {str(e)}") from e
 
     def _clean_image_url(self, url: str) -> str:
         """
@@ -522,7 +570,7 @@ class CrawlerAgent(AsyncBaseAgent):
 
             return clean_url
 
-        except Exception as e:
+        except (ValueError, RuntimeError, OSError) as e:
             self.logger.debug(f"URL清理失败: {str(e)}")
             return url
 
@@ -613,7 +661,7 @@ class CrawlerAgent(AsyncBaseAgent):
 
             return content_with_anchors
 
-        except Exception as e:
+        except (ValueError, RuntimeError, OSError) as e:
             self.logger.error(f"解析内容图片失败: {str(e)}")
             return text_content
 
@@ -654,7 +702,7 @@ class CrawlerAgent(AsyncBaseAgent):
                     if image_urls:
                         self.logger.info(f"找到 {len(image_urls)} 张图片 (选择器: {selector})")
                         break
-                except Exception as e:
+                except (RuntimeError, OSError, TimeoutError) as e:
                     self.logger.debug(f"图片选择器 {selector} 失败: {str(e)}")
                     continue
 
@@ -671,7 +719,7 @@ class CrawlerAgent(AsyncBaseAgent):
 
                 self.logger.info(f"懒加载后总图片数量: {len(image_urls)}")
 
-            except Exception as e:
+            except (RuntimeError, OSError, TimeoutError) as e:
                 self.logger.debug(f"懒加载图片处理失败: {str(e)}")
 
             # 过滤掉非文章内容的图片
@@ -704,7 +752,7 @@ class CrawlerAgent(AsyncBaseAgent):
 
             return image_data
 
-        except Exception as e:
+        except (RuntimeError, OSError, TimeoutError, ValueError) as e:
             self.logger.error(f"提取图片位置信息失败: {str(e)}")
             return {}
 
@@ -758,7 +806,7 @@ class CrawlerAgent(AsyncBaseAgent):
 
             self.logger.info("资源清理完成")
 
-        except Exception as e:
+        except (RuntimeError, OSError) as e:
             self.logger.error(f"资源清理失败: {str(e)}")
 
     async def health_check(self) -> dict[str, Any]:
@@ -770,5 +818,5 @@ class CrawlerAgent(AsyncBaseAgent):
                 "page_active": self.page is not None,
                 "timestamp": datetime.now().isoformat(),
             }
-        except Exception as e:
+        except (RuntimeError, OSError, ValueError) as e:
             return {"status": "unhealthy", "error": str(e), "timestamp": datetime.now().isoformat()}

@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from agents.crawler_agent import CrawlerAgent
+from config.config import CrawlerConfig
 
 
 @pytest.mark.asyncio
@@ -21,11 +22,14 @@ async def test_image_anchors():
     print("图片锚点功能测试")
     print("=" * 60)
 
-    # 配置
-    config = {
-        "crawler": {"headless": False, "max_articles": 1, "delay": 2.0, "timeout": 60},
-        "logging": {"level": "INFO", "format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}"},
-    }
+    # 配置 - 使用CrawlerConfig
+    config = CrawlerConfig(
+        headless=False,
+        max_articles=1,
+        delay=2.0,
+        timeout=60,
+        save_images=True,  # 确保启用图片保存
+    )
 
     # 测试文章URL
     test_urls = [
